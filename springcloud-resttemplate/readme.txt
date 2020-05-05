@@ -1,0 +1,1 @@
+springcloud中的resttemplate调用其他服务的方法

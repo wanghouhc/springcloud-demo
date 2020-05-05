@@ -1,0 +1,39 @@
+# 注释版本
+server:
+  port: 18084
+spring:
+  application:
+    name: api-gateway # 应用名
+  cloud:
+    gateway:
+     # 配置全局默认过滤器
+      default-filters:
+          # 往响应过滤器中加入信息
+        - AddResponseHeader=X-Response-Default-MyName,itheima
+      routes:
+          #id唯一标识，可自定义
+        - id: user-service-route
+            #路由的服务地址
+            #uri: http://localhost:18081
+            #lb协议表示从Eureka注册中心获取服务请求地址
+            #user-provider访问的服务名称。
+            #路由地址如果通过lb协议加服务名称时，会自动使用负载均衡访问对应服务 lb:loadblance
+          uri: lb://user-provider
+            # 路由拦截的地址配置（断言）
+          predicates:
+            - Path=/user/**
+          filters:
+            # 请求地址添加路径前缀过滤器,
+            #- PrefixPath=/user
+            # 去除路径前缀过滤器
+            #- StripPrefix=1
+            # 去除路径前缀过滤器 2个前缀
+            #- StripPrefix=2
+            #对访问参数的拦截
+            - MyParam=name,itheima
+# Eureka服务中心配置
+eureka:
+  client:
+    service-url:
+      # 注册Eureka Server集群
+      defaultZone: http://127.0.0.1:7001/eureka
